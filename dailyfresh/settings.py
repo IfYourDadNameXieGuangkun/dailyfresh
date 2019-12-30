@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'tinymce',#富文本编辑器
     'user',
     'cart',
     'goods',
@@ -82,14 +83,16 @@ WSGI_APPLICATION = 'dailyfresh.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'fresh', #数据库名字，
-        'USER': 'root_all', #数据库登录用户名
-        'PASSWORD': 'Root.all.123', #数据库登录密码
-        'HOST': '10.101.3.51', #数据库所在主机
+        'NAME': 'dailyfresh', #数据库名字，
+        'USER': 'root', #数据库登录用户名
+        'PASSWORD': 'root', #数据库登录密码
+        'HOST': '127.0.0.1', #数据库所在主机
         'PORT': '3306', #数据库端口
     }
 }
 
+#Django认证系统使用的模型类
+AUTH_USER_MODEL='user.User'
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -129,4 +132,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = os.path.join(BASE_DIR,'static')
+STATICFILES_DIRS = [os.path.join(BASE_DIR,'static')]
+
+TINYMCE_DEFAULT_CONFIG = {
+    'theme' : 'advance',
+    'width' : 600,
+    'height' : 400
+}

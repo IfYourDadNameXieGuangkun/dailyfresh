@@ -17,7 +17,8 @@ from django.contrib import admin
 from django.conf.urls import url,include
 
 urlpatterns = [
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/', admin.site.urls),
+    url(r'^tinymce/',include('tinymce.urls')),#富文本编辑器
     url(r'^user/',include('user.urls'),name='user'),#前面的正则表达式变了,localhost:8080/user/依然能解析,应该是这个意思
     url(r'^cart/',include('cart.urls'),name='cart'),
     url(r'^order/',include('order.urls'),name='order'),
