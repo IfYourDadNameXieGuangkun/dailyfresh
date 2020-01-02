@@ -22,6 +22,6 @@ urlpatterns = [
     url(r'^user/',include('user.urls'),name='user'),#前面的正则表达式变了,localhost:8080/user/依然能解析,应该是这个意思
     url(r'^cart/',include('cart.urls'),name='cart'),
     url(r'^order/',include('order.urls'),name='order'),
-    url(r'^',include('goods.urls'),name='goods'),
+    url(r'^goods/',include('goods.urls'),name='goods'),
 
 ]
