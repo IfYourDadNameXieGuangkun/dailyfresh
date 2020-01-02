@@ -4,7 +4,8 @@ from user.models import User
 import re
 from django.urls import reverse
 from django.views import View
-
+from itsdangerous import TimedJSONWebSignatureSerializer as Sign
+from dailyfresh import settings
 # Create your views here.
 
 # /user/register
@@ -131,5 +132,11 @@ class RegisterView(View):
         if user:
             return render(request, 'register.html', {'errormsg': '用户名已经存在'})
         user = User.objects.create_user(username, email, pwd)
+        user.is_active = 0
+        user.save()
+        #3.2加密用户名
+        username = user.username
+        sign = Sign(settings.SECRET_KEY , 3600)
+        username_sign = sign.dump(username)
         # 4.返回应答
         return redirect(reverse('goods:index'))
