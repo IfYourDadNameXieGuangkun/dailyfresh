@@ -4,8 +4,10 @@ from user.models import User
 import re
 from django.urls import reverse
 from django.views import View
-from itsdangerous import TimedJSONWebSignatureSerializer as Sign
-from dailyfresh import settings
+from itsdangerous import TimedJSONWebSignatureSerializer as Sign ,SignatureExpired
+from django.conf import settings
+from django.http import HttpResponse
+from django.core.mail import send_mail
 # Create your views here.
 
 # /user/register
@@ -134,9 +136,63 @@ class RegisterView(View):
         user = User.objects.create_user(username, email, pwd)
         user.is_active = 0
         user.save()
+
         #3.2加密用户名
         username = user.username
+        info = {'conform':user.id}
         sign = Sign(settings.SECRET_KEY , 3600)
-        username_sign = sign.dump(username)
+        username_sign = sign.dumps(info)
+        username_sign = username_sign.decode()
+        subject = '淘宝用户注册验证'
+        #message = 'https://127.0.0.1:8000/user/active/'+username_sign
+        message = ''
+        html_message = '<h1>%s,欢迎注册天天生鲜会员</h1>请点击下面的机会链接激活您的账户<br/><a herf="http://127.0.0.1:8000/user/active/%s">http://127.0.0.1:8000/user/active/%s</a>'%(username,username_sign,username_sign)
+        print(message)
+        sender = settings.EMAIL_FROM
+        receiver = [email]
+        #3.3发邮件
+        send_mail(subject,message,sender,receiver,html_message=html_message)
+
         # 4.返回应答
         return redirect(reverse('goods:index'))
+
+class ActiveView(View):
+    def get(self,request,token):
+        '''
+        用户激活
+        :param request:
+        :return:
+        '''
+        #print('token:%s'%token)
+        try:
+            sign = Sign(settings.SECRET_KEY, 3600)
+            info = sign.loads(token)
+            user_id = info['conform']
+            user = User.objects.get(id=user_id)
+            print('user:' + user.username)
+            user.is_active = 1
+            user.save()
+            #return HttpResponse('用户激活成功')
+            return redirect(reverse('user:login'))
+        except SignatureExpired as e:
+            return HttpResponse('链接已过期')
+
+
+class LoginView(View):
+
+    def get(self,request):
+
+        return render(request,'login.html')
+
+    def post(self,request):
+        password = request.POST.get('password')
+        username = request.POST.get('username')
+        print('pswd:%s',password)
+        try:
+            user = User.objects.get(username = username)
+        except User.DoesNotExist:  # 不存在会报错 捕获异常
+            user = None
+            return render(request,'login.html',{'errormsg':'用户不存在'})
+        if user:
+            print('登录成功')
+            return redirect(reverse('goods:index'))

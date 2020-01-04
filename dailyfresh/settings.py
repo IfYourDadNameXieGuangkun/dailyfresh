@@ -139,3 +139,16 @@ TINYMCE_DEFAULT_CONFIG = {
     'width' : 600,
     'height' : 400
 }
+
+
+QQ_SMTP = 'tijiclpyadoacbdd'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.qq.com'
+EMAIL_PORT = 25
+#发送邮件的邮箱
+EMAIL_HOST_USER = '240291083@qq.com'
+#在邮箱中设置的客户端授权密码
+EMAIL_HOST_PASSWORD = 'tijiclpyadoacbdd'
+#收件人看到的发件人
+EMAIL_FROM = 'python<240291083@qq.com>'
