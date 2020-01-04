@@ -152,3 +152,18 @@ EMAIL_HOST_USER = '240291083@qq.com'
 EMAIL_HOST_PASSWORD = 'tijiclpyadoacbdd'
 #收件人看到的发件人
 EMAIL_FROM = 'python<240291083@qq.com>'
+
+redis_url = '192.168.19.60'
+redis_port = '6379'
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://192.168.19.60:6379/5",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
